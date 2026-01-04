@@ -1,2 +1,4 @@
 # Automated-Trash-Collection-Bin
-River trash collection system
+This repository displays the setup for a modular river trash collection system, that attaches to trees and fully automates trash collection. 
+
+
