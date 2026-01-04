@@ -1,12 +1,9 @@
-// Cytron motor control pins
-const int pwmPin = 11;   // PW1
+const int pwmPin = 11;   // PWM
 const int dirPin = 8;    // DIR
-const int btnPin = 2;    // button to GND
+const int potPin = A0;   // Potentiometer pin
+const int btnPin = 2;    // Button to GND
 
-// Speed value (0–255)
-const int motorSpeed = 255;
 
-// Debounce variables
 bool lastBtnReading = HIGH;
 bool btnState = HIGH;
 unsigned long lastDebounceTime = 0;
@@ -19,12 +16,16 @@ void setup() {
 
   // Initial direction
   digitalWrite(dirPin, HIGH);
-
-  
-  analogWrite(pwmPin, motorSpeed);
 }
 
 void loop() {
+  // Read value 0-1023 and map to PWM range 0-255
+  int potValue = analogRead(potPin);
+  int motorSpeed = map(potValue, 0, 1023, 0, 255);
+
+  analogWrite(pwmPin, motorSpeed);
+
+  // button direction
   bool reading = digitalRead(btnPin);
 
   if (reading != lastBtnReading) {
@@ -35,17 +36,12 @@ void loop() {
     if (reading != btnState) {
       btnState = reading;
 
-      // Button pressed (LOW)
-      if (btnState == LOW) {
-        // Stop briefly
+      if (btnState == LOW) { 
         analogWrite(pwmPin, 0);
         delay(150);
 
-        // Flip direction pin directly
+        //change direction
         digitalWrite(dirPin, !digitalRead(dirPin));
-
-        // Resume motor
-        analogWrite(pwmPin, motorSpeed);
       }
     }
   }
